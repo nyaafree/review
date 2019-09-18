@@ -292,8 +292,6 @@ input[type="password"]{
 }
 .modal-close{
   font-size:40px;
-  width:40px;
-  height:40px;
   text-align:center;
   color:#fff;
   border:#fff solid 2px;
@@ -303,7 +301,7 @@ input[type="password"]{
   position:absolute;
   right:15px;
   top:10px;
-  line-height:40px;
+  line-height: 35px;
 }
 .msg-slide{
   color:#fff;
@@ -335,6 +333,9 @@ input[type="password"]{
   font-size:25px;
   font-family:"Yu Mincho", "YuMincho";
   overflow:hidden;
+}
+.pass-remind-modal{
+  min-height: 400px!important;
 }
 form select{
   background:rgba(185,162,239,0.9);
