@@ -334,8 +334,15 @@ input[type="password"]{
   font-family:"Yu Mincho", "YuMincho";
   overflow:hidden;
 }
+#main .page-title{
+  text-align: center;
+  font-size: 35px;
+}
 .pass-remind-modal{
   min-height: 400px!important;
+}
+.pass-edit-main{
+  min-height: 750px!important;
 }
 form select{
   background:rgba(185,162,239,0.9);

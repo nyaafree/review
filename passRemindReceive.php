@@ -90,7 +90,7 @@ EOT;
 
             //セッション削除
             session_unset();
-            $_SESSION['msg_success'] = SUC03;
+            $_SESSION['msg_success'] = SUC09;
             debug('セッション変数の中身：'.print_r($_SESSION,true));
 
             header("Location:login.php"); //ログインページへ

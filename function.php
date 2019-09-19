@@ -79,6 +79,9 @@ define('SUC04','商品登録完了しました！！');
 define('SUC05','レビュー投稿完了しました！！');
 define('SUC06','退会処理完了しました！！');
 define('SUC07','コンテンツ削除に成功しました！！');
+define('SUC08', 'パスワード再発行のためのメールを送信しました');
+define('SUC09', '再発行したパスワード付きのメールを送信しました');
+define('SUC10', 'パスワード変更完了しました！！');
 define('FAL01','退会処理に失敗しました。');
 
 
@@ -157,6 +160,15 @@ function validHalf($str,$key){
   if(!preg_match("/^[a-zA-Z0-9]+$/",$str)){
     $err_msg[$key] = MSG04;
   }
+}
+//パスワードチェック
+function validPass($str, $key){
+  //半角英数字チェック
+  validHalf($str, $key);
+  //最大文字数チェック
+  validMaxLen($str, $key);
+  //最小文字数チェック
+  validMinLen($str, $key);
 }
 
 
@@ -579,6 +591,28 @@ function getUserReview($p_id){
 
   } catch (Exception $e) {
     error_log('エラー発生：'.$e->getMessage());
+  }
+}
+
+
+//===============================================================
+// メール送信
+//===============================================================
+
+function sendMail($from, $to, $subject, $comment){
+  if(!empty($to) && !empty($subject) && !empty($comment)){
+      //文字化けしないように設定（お決まりパターン）
+      mb_language("Japanese"); //現在使っている言語を設定する
+      mb_internal_encoding("UTF-8"); //内部の日本語をどうエンコーディング（機械が分かる言葉へ変換）するかを設定
+      
+      //メールを送信（送信結果はtrueかfalseで返ってくる）
+      $result = mb_send_mail($to, $subject, $comment, "From: ".$from);
+      //送信結果を判定
+      if ($result) {
+        debug('メールを送信しました。');
+      } else {
+        debug('【エラー発生】メールの送信に失敗しました。');
+      }
   }
 }
 

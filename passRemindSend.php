@@ -49,12 +49,12 @@ if(!empty($_POST)){
         // EmailがDBに登録されている場合
         if($stmt && array_shift($result)){
           debug('クエリ成功。DB登録あり。');
-          $_SESSION['msg_success'] = SUC03;
+          $_SESSION['msg_success'] = SUC08;
           
           $auth_key = makeRandKey(); //認証キー生成
           
           //メールを送信
-          $from = 'sumedicecalesddefde_7777@yahoo.co.jp';
+          $from = 'success@review.nyanta.jp';
           $to = $email;
           $subject = '【パスワード再発行認証】｜Review';
           //EOTはEndOfFileの略。ABCでもなんでもいい。先頭の<<<の後の文字列と合わせること。最後のEOTの前後に空白など何も入れてはいけない。
@@ -73,7 +73,7 @@ http://review.nyanta.jp/review/passRemindSend.php
 ////////////////////////////////////////
 Review 公式
 URL  http://review.nyanta.jp/review/index.php
-E-mail sumedicecalesddefde_7777@yahoo.co.jp
+E-mail success@review.nyanta.jp
 ////////////////////////////////////////
 EOT;
           sendMail($from, $to, $subject, $comment);
