@@ -4,7 +4,7 @@
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「　コンテンツ詳細ページ　');
+debug('「 コンテンツ詳細ページ ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
 
@@ -28,11 +28,11 @@ $dbAllUserReview = getUserReview($p_id);
 $dbUserReview = array_shift($dbAllUserReview);
 debug('全てのレビュー情報：'.print_r($dbAllUserReview,true));
 debug('ユーザーの最新レビュー情報：'.print_r($dbUserReview,true));
-debug('レビュー情報：'.print_r($dbReviewData,true));
+debug('コンテンツのレビュー情報：'.print_r($dbReviewData,true));
 // パラメータに不正な値が入っているかチェック
 if(empty($dbProductData)){
   error_log('エラー発生：指定ページに不正な値が入りました。');
-  header("Location:index.php"); //マイページへ遷移
+  header("Location:mypage.php"); //マイページへ遷移
 }
 debug('取得したDBデータ：'.print_r($dbProductData,true));
 
@@ -74,7 +74,9 @@ if(!empty($_POST)){
       
       $avg = $stmt->fetch(PDO::FETCH_ASSOC);
       debug('$avg:'.print_r($avg,true));
+      // $avgは配列形式になっているので１つ目を取り出す
       $avg = array_shift($avg);
+      // round()を使って少数第2位で四捨五入する
       $avg = round($avg,1);
       debug('レビュー平均：'.$avg);
 
@@ -109,7 +111,7 @@ require('head.php');
 
 <body class="page-1colum">
   
-  <!-- ヘッダー　--> 
+  <!-- ヘッダー --> 
   <?php
   require('header.php');
   ?>
@@ -138,11 +140,10 @@ require('head.php');
             購入サイト： <?php echo $dbProductData['purchasesite']; ?>
           </div>
           <div class="price">
-            レビュー平均(全<?php echo  count($dbReviewData); ?>件中)：<?php echo $dbProductData['average_review']; ?>
+            レビュー平均(全<?php echo count($dbReviewData); ?>件中)：<?php echo $dbProductData['average_review']; ?>
             <?php showReview($dbProductData['average_review']); ?>
-            
           </div>
-          <a href="<?php echo $dbProductData['url']; ?>" id="purchase-link" target="_blank">購入したい方はコチラ >></a>
+          <a href="<?php echo sanitize($dbProductData['url']); ?>" id="purchase-link" target="_blank">購入したい方はコチラ >></a>
         </div>
       </div>
       <div class="detail-center">
@@ -167,7 +168,7 @@ require('head.php');
         <p class="title">レビューしてみる</p>
         <form action="" method = "post">
           <div class="left">
-            <label>　<span>コメント</span><br>
+            <label> <span>コメント</span><br>
               <textarea name="review_comment" cols="25" rows="10"></textarea>
             </label>
             <div class="area-msg">
@@ -199,17 +200,17 @@ require('head.php');
   <?php if($_SESSION['user_id'] == $dbProductData['user_id']): ?> 
     <script>
         document.getElementById('submit-review').onclick = function(){
-        alert('自分で登録したコンテンツへレビュー投稿は出来ません');
-        return false;
+          alert('自分で登録したコンテンツへレビュー投稿は出来ません');
+          return false;
         }
     </script>
   <?php endif ?>
   
   <?php if(in_array($_SESSION['user_id'],array_column($dbReviewData,'reviewer_id'))): ?> 
     <script>
-      　document.getElementById('submit-review').onclick = function(){
-        alert('１つのコンテンツにつき１回しかレビューは投稿は出来ません');
-        return false;
+        document.getElementById('submit-review').onclick = function(){
+          alert('１つのコンテンツにつき１回しかレビューは投稿は出来ません');
+          return false;
       }
     </script>
   <?php endif ?>
@@ -217,15 +218,14 @@ require('head.php');
 
        <div class="review-modal" style="display:none;" >
          <?php foreach($dbAllUserReview as $key => $val): ?> 
-         <div class="review-show" style="display:none;">
-            
-            <div class="review-head">
-              <img src="<?php echo $val['pic']; ?>" alt=""> <p><?php echo $val['username']; ?>
-              <?php echo (!empty($val['age'])) ? $val['age'].'歳' : ''; ?>
-              <?php if($val['sex'] == 1): ?>
-               男性
-              <?php elseif($val['sex'] == 2): ?>
-               女性
+           <div class="review-show" style="display:none;">
+             <div class="review-head">
+               <img src="<?php echo $val['pic']; ?>" alt=""> <p><?php echo $val['username']; ?>
+               <?php echo (!empty($val['age'])) ? $val['age'].'歳' : ''; ?>
+               <?php if($val['sex'] == 1): ?>
+                 男性
+               <?php elseif($val['sex'] == 2): ?>
+                 女性
               <?php endif ?> <?php showReview($val['review']); ?></p>
             </div>
             <p class="review-bottom">

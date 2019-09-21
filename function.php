@@ -55,22 +55,19 @@ define('MSG01','入力必須です');
 define('MSG02','Emailの形式で入力してください');
 define('MSG03','パスワード（再入力が合っていません）');
 define('MSG04','半角英数字のみご利用いただけます');
-define('MSG05','６文字以上で入力してください');
-define('MSG06','255文字で入力してください');
+define('MSG05','6文字以上で入力してください');
+define('MSG06','255文字以内で入力してください');
 define('MSG07','エラーが発生しました。しばらく経ってからやり直してください。');
 define('MSG08','そのEmailはすでに登録されています');
 define('MSG09', 'メールアドレスまたはパスワードが違います');
 
 
-
-
-
+define('MSG12', '古いパスワードが違います');
+define('MSG13', '古いパスワードと同じです');
+define('MSG14', '文字で入力してください');
 define('MSG15','正しくありません');
-
+define('MSG16', '有効期限が切れています');
 define('MSG17','半角数字のみご利用いただけます');
-
-
-
 
 define('SUC01','会員登録完了しました！！');
 define('SUC02', 'ログイン成功です！！');
@@ -82,6 +79,7 @@ define('SUC07','コンテンツ削除に成功しました！！');
 define('SUC08', 'パスワード再発行のためのメールを送信しました');
 define('SUC09', '再発行したパスワード付きのメールを送信しました');
 define('SUC10', 'パスワード変更完了しました！！');
+define('SUC11', '商品情報編集完了しました！！');
 define('FAL01','退会処理に失敗しました。');
 
 
@@ -95,14 +93,14 @@ $err_msg = array();
 // バリデーション関数
 //=========================================
 
-//バリデーション関数（未入力チェック）
+//バリデーション関数（未入力チェック,$strにフォームの入力値、$keyにはフォームのname属性）
 function validRequired($str,$key){
   if($str === ''){ //金額フォームなどを考えると、数字の０や数値の0はOKにし、空文字はダメにする
     global $err_msg;
     $err_msg[$key] = MSG01;
   }
 }
-//バリデーション関数（Emain形式チェック）
+//バリデーション関数（Email形式チェック）
 function validEmail($str,$key){
   if(!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/",$str)){
     global $err_msg;
@@ -155,13 +153,15 @@ function validMaxLen($str,$key,$max = 255){
     $err_msg[$key] = MSG06;
   }
 }
+// 半角英数字チェック
 function validHalf($str,$key){
   global $err_msg;
   if(!preg_match("/^[a-zA-Z0-9]+$/",$str)){
     $err_msg[$key] = MSG04;
   }
 }
-//パスワードチェック
+
+//パスワードチェック専用のバリデーションメソッドまとめ
 function validPass($str, $key){
   //半角英数字チェック
   validHalf($str, $key);
@@ -171,43 +171,21 @@ function validPass($str, $key){
   validMinLen($str, $key);
 }
 
+//固定長チェック
+function validLength($str, $key, $len = 8){
+  if( mb_strlen($str) !== $len ){
+    global $err_msg;
+    $err_msg[$key] = $len . MSG14;
+  }
+}
 
-
-
-
-
-
-
-
-
+// 半角数字かどうかのチェック
 function validNumber($str, $key){
   if(!preg_match("/^[0-9]+$/",$str)){
     global $err_msg;
     $err_msg[$key] = MSG17;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // セレクトボックスチェック
 function validSelect($str, $key){
@@ -243,12 +221,6 @@ function isLogin(){
   }
 }
 
-
-
-
-
-
-
 // エラーメッセージを表示
 function getErrMsg($key){
   global $err_msg;
@@ -257,31 +229,15 @@ function getErrMsg($key){
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//認証キー生成
+function makeRandKey($length = 8) {
+  static $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJLKMNOPQRSTUVWXYZ0123456789';
+  $str = '';
+  for ($i = 0; $i < $length; ++$i) {
+      $str .= $chars[mt_rand(0, 61)];
+  }
+  return $str;
+}
 
 //============================================
 // データベース
@@ -349,6 +305,7 @@ function getUser($u_id){
     $err_msg['common'] = MSG07;
   }
 }
+// 引数にはレビュー数値を入れる
 function showReview($ReviewInfo){
   if (0.5 < $ReviewInfo && $ReviewInfo <= 1.0){
         echo "<span class='rate rate1'></span>";
@@ -369,8 +326,9 @@ function showReview($ReviewInfo){
   }elseif(4.5 < $ReviewInfo && $ReviewInfo <= 5.0){
         echo "<span class='rate rate5'></span>";
   }
-        
 }
+
+// 自分が登録したレビューコンテンツを取得
 function getMyproducts($u_id){
   // 例外処理
   try{
@@ -393,6 +351,8 @@ function getMyproducts($u_id){
     error_log('エラー発生：'.$e->getMessage());
   }
 }
+
+// 自分がしたレビュー情報一覧を取得
 function getMyReviewInfo($u_id){
   // 例外処理
   try{
@@ -416,11 +376,6 @@ function getMyReviewInfo($u_id){
     error_log('エラー発生：'.$e->getMessage());
   }
 }
-
-
-
-
-
 
 function getProduct($u_id, $p_id){
   debug('商品情報を取得します。');
@@ -472,6 +427,7 @@ function getProductOne($p_id){
     error_log('エラー発生：'.$e->getMessage());
   }
 }
+
 function getProductList($currentMinNum = 0, $category, $freeWord, $sort, $span = 15){
   debug('商品リストを取得します。');
   // 例外処理
@@ -481,6 +437,7 @@ function getProductList($currentMinNum = 0, $category, $freeWord, $sort, $span =
     // 件数用のSQL文作成
     $sql = 'SELECT id FROM product';
     if(!empty($freeWord)){ 
+      // 商品名またはレビュー内容または購入サイトからフリーワードに一致するものを検索
       $sql .= ' WHERE (name LIKE "%'.$freeWord.'%" OR comment 
       LIKE "%'.$freeWord.'%" OR purchasesite LIKE "%'.$freeWord.'%" ) AND delete_flg = 0';
       if(!empty($category)) $sql .= ' AND category_id = '.$category;
@@ -491,9 +448,11 @@ function getProductList($currentMinNum = 0, $category, $freeWord, $sort, $span =
     if(!empty($sort)){
       switch($sort){
         case 1:
+          // レビューが高評価の順に並べる
           $sql .= ' ORDER BY average_review DESC';
           break;
         case 2:
+          // レビューが低評価の順に並べる
           $sql .= ' ORDER BY average_review ASC';
           break;
       }
@@ -547,7 +506,6 @@ function getProductList($currentMinNum = 0, $category, $freeWord, $sort, $span =
   }
 }
 function getReviewInfo($p_id){
-  
   // 例外処理
   try {
     // DB接続
@@ -616,148 +574,6 @@ function sendMail($from, $to, $subject, $comment){
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function getCategory(){
   debug('カテゴリーデータを取得します。');
   //例外処理
@@ -782,22 +598,15 @@ function getCategory(){
   }
 }
 
-
-
-
-
-
-
-
-
 //=============================================================
 // その他
 //=============================================================
-// サニタイズ
+// サニタイズ(DBからレコードを取得した時などに不正な値が入っていた場合にそれを無効化する)
 function sanitize($str){
   return htmlspecialchars($str,ENT_QUOTES);                 
 }
-// フォーム入力保持
+
+// フォーム入力保持($strにはフォームのname属性を入れる)
 function getFormData($str,$flg = false){
   if($flg){
     $method = $_GET;
@@ -805,6 +614,7 @@ function getFormData($str,$flg = false){
     $method = $_POST;
   }
   global $dbFormData;
+  global $err_msg;
   // ユーザーデータがある場合
   if(!empty($dbFormData)){
     // フォームエラーがある場合
@@ -820,16 +630,19 @@ function getFormData($str,$flg = false){
       // POSTにデータがあり、DBの情報と違う場合
       if(isset($method[$str]) && $method[$str] !== $dbFormData[$str]){
         return sanitize($method[$str]);
+      // POSTにデータがあって、DBの情報と同じ場合
       }else{
         return sanitize($dbFormData[$str]);
       }
     }
+  // ユーザデータがそもそもない場合
   }else{
     if(isset($method[$str])){
       return sanitize($method[$str]);
     }
   }
 }
+
 // ページング
 // $currentPageNum 現在のページ数
 // $totalPageNum 総ページ数
@@ -878,21 +691,6 @@ function pagination( $currentPageNum, $totalPageNum, $link = '', $pageColNum = 5
   echo '</div>';
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // 画像処理
 function uploadImg($file, $key){
   debug('画像アップロード処理開始。');
@@ -930,6 +728,7 @@ function uploadImg($file, $key){
       // DBにパスを保存した場合どちらの画像のパスなのか判断がつかなくなってしまう
       // image_type_to_extension関数はファイル拡張子を取得するもの(引数にはMIMEタイプを入れる)
       $path = 'uploads/'.sha1_file($file['tmp_name']).image_type_to_extension($type); 
+      // 第一引数には移動前の画像のパス、第二引数には移動後の画像パスを指定
       if(!move_uploaded_file($file['tmp_name'], $path)){ // ファイルを移動する
         throw new RuntimeException('ファイル保存時にエラーが発生しました。');
       }
@@ -957,6 +756,7 @@ function appendGetParam($arr_del_key = array()){
         $str .= $key.'='.$val.'&';
       }
     }
+    // $strの最後の１文字(&)を削除
     $str = mb_substr($str,0,-1,"UTF-8");
     return $str;
   }
@@ -974,46 +774,6 @@ function addParam($arr_del_key = array()){ // 引数に指定したGETパラメ�
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //sessionを１回だけ取得できる
 function getSessionFlash($key){
   if(!empty($_SESSION[$key])){
@@ -1030,38 +790,5 @@ function flashErrMsg(){
     return $data;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ?>

@@ -4,7 +4,7 @@
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「　プロフィール編集ページ　');
+debug('「 プロフィール編集ページ ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
 
@@ -128,9 +128,9 @@ require('head.php');
           <p class="title">年齢</p>
           <select name="age" id="" class="age-select">
               <option value="0" <?php if(getFormData('age') == 0) echo 'selected'; ?>>未選択</option>
-            <?php for($i=15; $i <= 100; $i++): ?>
-              <option value="<?php echo $i ?>" <?php if(getFormData('age') == $i) echo 'selected'; ?>><?php echo $i; ?></option>
-            <?php endfor ?>
+              <?php for($i=15; $i <= 100; $i++): ?>
+                <option value="<?php echo $i ?>" <?php if(getFormData('age') == $i) echo 'selected'; ?>><?php echo $i; ?></option>
+              <?php endfor ?>
           </select>
           <div class="imgDrop-container">
             <label class="area-drop <?php if(!empty($err_msg['pic'])) echo 'err'; ?>">

@@ -1,6 +1,5 @@
 <footer id="footer">
    <span>&copy;<a href="index.php">Review</a>. All Rights Reserved.</span>
-   <button id="contact">お問い合わせ</button>
 </footer>
 <script src="js/vendor/jquery-2.2.2.min.js"></script>
 
@@ -14,95 +13,128 @@ $(function(){
   if ( window.innerHeight > $ftr.offset().top + $ftr.outerHeight() ){
     $ftr.attr({'style' : 'position:fixed; top:' + ( window.innerHeight - $ftr.outerHeight() ) + 'px;'});
   };
-    //モーダルウィンドウを表示
-    $("#modal-window,.modal-bg").fadeIn('slow');
-    // 閉じるを押したらモーダルウィンドウが消える
-    $('.modal-close, .modal-bg').on('click',function(e){
-     
-      $('#modal-window,.modal-bg').fadeOut('slow',function(){
-         window.location.href = 'index.php';
-      });
+
+
+  //モーダルウィンドウを表示
+  $("#modal-window,.modal-bg").fadeIn('slow');
+  // 閉じるを押したらモーダルウィンドウが消える
+  $('.modal-close, .modal-bg').on('click',function(e){
+    $('#modal-window,.modal-bg').fadeOut('slow',function(){
+      window.location.href = 'index.php';
     });
-    //画面の左上からmodal-windowの横幅・高さを引き、その値を2で割ると画面中央の位置が計算できます
-     $(window).resize(modalResize());  //browserの高さや幅が変わったときに検知して処理してくれるメソッドがresizeメソッド。注意点は$(window)だけにしか使えない事
-      function modalResize(){
+  });
+
+  //画面の左上からmodal-windowの横幅・高さを引き、その値を2で割ると画面中央の位置が計算できます
+
+  $(window).resize(modalResize());  //browserの高さや幅が変わったときに検知して処理してくれるメソッドがresizeメソッド。注意点は$(window)だけにしか使えない事
+  
+  function modalResize(){
  
-            var w = $(window).width(); //browserのウィンドウサイズの横幅を取得
-          var h = $(window).height();  //browserのウィンドウサイズの縦幅を取得
+    var w = $(window).width(); //browserのウィンドウサイズの横幅を取得
+    var h = $(window).height();  //browserのウィンドウサイズの縦幅を取得
  
-            var cw = $("#modal-window").outerWidth(); //モーダルウィンドウの横幅(padding,border含む)を取得
-           var ch = $("#modal-window").outerHeight(); //モーダルウィンドウの縦幅(padding,border含む)を取得
+    var cw = $("#modal-window").outerWidth(); //モーダルウィンドウの横幅(padding,border含む)を取得
+    var ch = $("#modal-window").outerHeight(); //モーダルウィンドウの縦幅(padding,border含む)を取得
  
-        //取得した値をcssに追加する
-            $("#modal-window").css({
-                "left": ((w - cw)/2) + "px",
-                "top": ((h - ch)/2) + "px"
-          });
-     };
+    //取得した値をcssに追加する
+    $("#modal-window").css({
+      "left": ((w - cw)/2) + "px",
+      "top": ((h - ch)/2) + "px"
+    });
+  };
+
   // メッセージ表示用
   var $jsShowMsg = $('#js-show-msg');
   var msg = $jsShowMsg.text();
-  if(msg.replace(/^[\s　]+|[\s　]+$/g, '').length){ //msgのスペースをすべて空文字に変換して正確な文字列の長さを取得 
+  if(msg.replace(/^[\s ]+|[\s ]+$/g, '').length){ //msgのスペースをすべて空文字に変換して正確な文字列の長さを取得 
    $jsShowMsg.slideToggle('slow');
    setTimeout(function(){ $jsShowMsg.slideToggle(); },5000);
   }
 
   // マイページ一覧表示切替
- var $6contents = $('.panel-list'),
+
+  // 登録コンテンツの中から6コンテンツがこの中に入る
+  var $6contents = $('.panel-list'),
+  // 登録コンテンツの全てがこの中に入る
   $allshow = $('.panel-list2'),
+  // 登録コンテンツ表示切り替えボタン
   $allcontents = $('#allcontents');
   $allcontents.on('click',function(e){
     $6contents.slideToggle('slow');
     $allshow.slideToggle('slow');
   });
- var $fewcontents = $('#fewcontents');
 
- $fewcontents.on('click',function(e){
+  // 一覧表示を終えるボタン
+  var $fewcontents = $('#fewcontents');
+
+  $fewcontents.on('click',function(e){
     $allshow.slideToggle('slow');
     $6contents.slideToggle('slow');
   });
+
+  // レビュー一覧表示ボタン
   var $show = $('#show'),
+      // レビュー一覧表示終了ボタン
       $blind = $('#blind'),
+      // 自分のした全レビューがこの中に入っている
       $allcontents2 = $('#allcontents2'),
+      // 自分のした全レビューのうち6つがこの中に入っている
       $fewcontents2 = $('#fewcontents2');
 
+  // 一覧をみるをクリックしたら全てのレビューを表示
   $allcontents2.on('click',function(e){
     $show.slideToggle('slow');
     $blind.slideToggle('slow');
   });
+
+  // 一覧表示を終えるをクリックしたら6つのレビューのみを表示
   $fewcontents2.on('click',function(e){
     $blind.slideToggle('slow');
     $show.slideToggle('slow');
   });
 
-  // レビュー表示用モーダル
+  // レビュー表示用パネル
   var $panel = $('.pan2');
-  $panel.on('click',function(e){
-
-    
-   
+  // 自分がレビューをした商品パネルをクリックしたら自分のレビューが下にぬるっと表示される
+  $panel.on('click',function(e){  
     $(this).find('.panel-bottom').slideToggle('slow');
-    
   });
 
-  // レビュー一覧表示用モーダル
+  // コンテンツ詳細画面でのレビュー一覧表示用パネル
   var $reviewModal = $('.review-modal');
+
+  // 他のレビュー一覧をみるをクリックすると最新レビュー以外の全レビューがモーダル形式で表示される
   $('.allreview').on('click',function(e){
-     // 背面用の紫（押したら消える）とレビュー一覧用のモーダルを表示
-     $('.review-show,.modal-bg2,.review-modal').fadeIn('slow');
-     $('.modal-bg2').on('click',function(e){
-     $('.review-show,.modal-bg2,.review-modal').fadeOut('slow');
-     })
+    // 背面用の紫（押したら消える）とレビュー一覧用のモーダルを表示
+    $('.review-show,.modal-bg2,.review-modal').fadeIn('slow');
+    // 背景の紫の部分をクリックしたらレビュー表示用モーダルが消える
+    $('.modal-bg2').on('click',function(e){
+      $('.review-show,.modal-bg2,.review-modal').fadeOut('slow');
+    })
   })
 
   // 退会処理モーダル
   $('#withdraw-click').on('click',function(e){
-    
-    
-    //画面中央を計算する関数を実行
-    modalResize();
 
-    // 背面用の紫（押したら消える）と退会処理用のフォームウィンドウを表示
+    //画面の左上からmodal-windowの横幅・高さを引き、その値を2で割ると画面中央の位置が計算できます
+    $(window).resize(modalResize2);  //browserの高さや幅が変わったときに検知して処理してくれるメソッドがresizeメソッド。注意点は$(window)だけにしか使えない事
+      
+    function modalResize2(){
+      var w = $(window).width(); //browserのウィンドウサイズの横幅を取得
+      var h = $(window).height();  //browserのウィンドウサイズの縦幅を取得
+ 
+      var cw = $("#modal-window2").outerWidth(); //モーダルウィンドウの横幅(padding,border含む)を取得
+      var ch = $("#modal-window2").outerHeight(); //モーダルウィンドウの縦幅(padding,border含む)を取得
+ 
+      //取得した値をcssに追加する
+      $("#modal-window2").css({
+        "left": ((w - cw)/2) + "px",
+        "top": ((h - ch)/2) + "px"
+      });
+    };
+  
+
+    // 背景用の紫（押したら消える）と退会処理用のフォームウィンドウを表示
     $('.modal-bg2,#modal-window2').fadeIn('slow');
 
     $('.withdraw-submit').on('click',function(){
@@ -111,33 +143,20 @@ $(function(){
       return false;
       }
     });
-    
+
+    // 背景の紫の部分をクリックしたら退会処理モーダルがフェードアウトする
     $('.modal-bg2').on('click',function(e){
       $('.modal-bg2,#modal-window2').fadeOut('slow');
     });
   });
 
-     //画面の左上からmodal-windowの横幅・高さを引き、その値を2で割ると画面中央の位置が計算できます
-     $(window).resize(modalResize);  //browserの高さや幅が変わったときに検知して処理してくれるメソッドがresizeメソッド。注意点は$(window)だけにしか使えない事
-      function modalResize(){
  
-            var w = $(window).width(); //browserのウィンドウサイズの横幅を取得
-          var h = $(window).height();  //browserのウィンドウサイズの縦幅を取得
- 
-            var cw = $("#modal-window2").outerWidth(); //モーダルウィンドウの横幅(padding,border含む)を取得
-           var ch = $("#modal-window2").outerHeight(); //モーダルウィンドウの縦幅(padding,border含む)を取得
- 
-        //取得した値をcssに追加する
-            $("#modal-window2").css({
-                "left": ((w - cw)/2) + "px",
-                "top": ((h - ch)/2) + "px"
-          });
-     };
-  
   
  
 
   // 画像ライブプレビュー
+
+  // 
   var $dropArea = $('.area-drop');
   var $fileInput = $('.input-file');
   $dropArea.on('dragover',function(e){

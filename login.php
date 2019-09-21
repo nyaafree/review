@@ -3,7 +3,7 @@
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「　ログインページ　');
+debug('「 ログインページ ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
 
@@ -57,6 +57,8 @@ if(!empty($_POST)){
         debug('クエリ結果の中身：'.print_r($result,true));
 
         // パスワード照合
+
+        // array_shift関数は配列の１つ目をreturnする
         if(!empty($result) && password_verify($pass,array_shift($result)) ){ // password_verifyは第一引数に普通のパスワードを、第二引数にハッシュ化されたパスワードを入れて合致すればtrueを返す
           debug('パスワードがマッチしました。');
 
@@ -83,7 +85,9 @@ if(!empty($_POST)){
           header("Location:mypage.php");
         }else{
           debug('パスワードはアンマッチです。');
-          $err_msg['common'] = MSG09; // パスワードが違うと断言したらメールアドレスは合致してると知られてしまうので、力業でパスワードを特定されればログインされてしまうから
+          // パスワードが違うと断言したらメールアドレスは合致してると知られてしまうので、力業でパスワードを特定されればログインされてしまう
+          // そのため「メールアドレスまたはパスワードが違います」のようなエラーメッセージを出すようにすること
+          $err_msg['common'] = MSG09; 
         }
 
       } catch (Exception $e) {
@@ -103,6 +107,10 @@ debug('画面表示処理終了 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 $siteTitle = 'Review | ログインページ';
 require('head.php');
 ?>
+
+<p id="js-show-msg" class="msg-slide">
+    <?php echo getSessionFlash('msg_success'); ?>
+</p>
 
   <body class="page-1colum page-login">
     
@@ -139,7 +147,7 @@ require('head.php');
             <input type="submit" value="ログイン">
           </div>
           <div class="pass-remind-container">
-            パスワードを忘れた方は<a href="passRemindsend.php">コチラ</a>
+            パスワードを忘れた方は<a href="passRemindSend.php">コチラ</a>
           </div>
         </form> 
       </div>

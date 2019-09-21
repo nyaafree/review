@@ -4,7 +4,7 @@
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「　パスワード変更ページ　');
+debug('「 パスワード変更ページ ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
 
@@ -41,7 +41,7 @@ if(!empty($_POST)){
     //新しいパスワードのチェック
     validPass($pass_new, 'pass_new');
     
-    //古いパスワードとDBパスワードを照合（DBに入っているデータと同じであれば、半角英数字チェックや最大文字チェックは行わなくても問題ない）
+    //古いパスワードとDBパスワードを照合
     if(!password_verify($pass_old, $userData['password'])){
       $err_msg['pass_old'] = MSG12;
     }
@@ -55,7 +55,6 @@ if(!empty($_POST)){
     
     if(empty($err_msg)){
       debug('バリデーションOK。');
-
       //例外処理
       try {
         // DBへ接続
@@ -120,11 +119,11 @@ require('head.php');
       <h1 class="page-title">パスワード変更</h1>
         <div class="form-container">
           <form action="" method="post" class="form">
-           <div class="area-msg">
-             <?php 
-             echo getErrMsg('common');
-             ?>
-           </div>
+            <div class="area-msg">
+              <?php 
+                echo getErrMsg('common');
+              ?>
+            </div>
             <label class="<?php if(!empty($err_msg['pass_old'])) echo 'err'; ?>">
               古いパスワード
               <input type="password" name="pass_old" value="<?php echo getFormData('pass_old'); ?>">

@@ -4,7 +4,7 @@
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「　商品登録画面　');
+debug('「 商品登録画面 ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
 
@@ -49,7 +49,7 @@ if(!empty($_POST)){
   $category = $_POST['category_id'];
   $comment = $_POST['comment'];
   $purchaseSite = $_POST['purchasesite'];
-  $price = (!empty($_POST['price'])) ? $_POST['price'] : 0; // priceカラムはint型ゆえデフォルトではDBに０が入っている　その為、空文字で送信すると以下で行うバリデーションに引っかかる為、空文字または数字や数値の０を入力した場合は0がPOST送信されたことにする
+  $price = (!empty($_POST['price'])) ? $_POST['price'] : 0; // priceカラムはint型ゆえデフォルトではDBに０が入っている その為、空文字で送信すると以下で行うバリデーションに引っかかる為、空文字または数字や数値の０を入力した場合は0がPOST送信されたことにする
   // 画像をアップロードしパスを格納
   $pic = ( !empty($_FILES['pic']['name']) ) ? uploadImg($_FILES['pic'],'pic') : '';
   // 画像をPOSTしていないが既にDBに登録されている場合、DBのパスを入れる（POSTには反映されない為）
@@ -85,6 +85,8 @@ if(!empty($_POST)){
       validSelect($category, 'category_id');
     }
     if($dbFormData['comment'] !== $comment){
+      // 未入力チェック
+      validRequired($comment, 'comment');
       // 最大文字数チェック
       validMaxLen($comment,'comment',500);
     }
@@ -127,7 +129,11 @@ if(!empty($_POST)){
 
       // クエリ成功の場合
       if($stmt){
-        $_SESSION['msg_success'] = SUC04;
+        if($edit_flg){
+          $_SESSION['msg_success'] = SUC11;
+        }else{
+          $_SESSION['msg_success'] = SUC04;
+        }
         debug('マイページへ遷移します。');
         header("Location:mypage.php");
       }
@@ -194,7 +200,7 @@ require('head.php');
               <div class="area-msg">
                 <?php if(!empty($err_msg['comment'])) echo $err_msg['comment']; ?>
               </div>
-              <label class="<?php if(!empty($err_msg['price'])); ?>">
+              <label class="<?php if(!empty($err_msg['price'])) echo 'err'; ?>">
                 価格<br>
                 ¥ <input type="text" name="price" value="<?php echo getFormData('price'); ?>" class="input-price"> 円
               </label>

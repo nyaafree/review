@@ -4,7 +4,7 @@
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「　退会ページ　');
+debug('「 退会ページ ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 
 if(!empty($_POST)){
@@ -17,14 +17,16 @@ if(!empty($_POST)){
     // SQL文作成
     $sql1 = 'UPDATE users SET delete_flg = 1 WHERE id = :u_id';
     $sql2 = 'UPDATE product SET delete_flg = 1 WHERE user_id = :u_id';
+    $sql3 = 'UPDATE product_review SET delete_flg = 1 WHERE reviewer_id = :u_id';
 
     $data = array(':u_id' => $_SESSION['user_id']);
 
     // クエリ実行
     $stmt1 = queryPost($dbh, $sql1, $data);
     $stmt2 = queryPost($dbh, $sql2, $data);
+    $stmt3 = queryPost($dbh, $sql3, $data);
 
-    if($stmt1 && $stmt2){
+    if($stmt1 && $stmt2 && $stmt3){
       // セッション削除
       session_destroy();
       debug('セッション変数の中身：'.print_r($_SESSION,true));

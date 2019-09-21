@@ -4,7 +4,7 @@
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「　パスワード再発行認証キー入力ページ　');
+debug('「 パスワード再発行認証キー入力ページ ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
 
@@ -67,7 +67,7 @@ if(!empty($_POST)){
             debug('クエリ成功。');
 
             //メールを送信
-            $from = 'sumedicecalesddefde_7777@yahoo.co.jp';
+            $from = 'success@review.nyanta.jp';
             $to = $_SESSION['auth_email'];
             $subject = '【パスワード再発行完了】｜Review';
             //EOTはEndOfFileの略。ABCでもなんでもいい。先頭の<<<の後の文字列と合わせること。最後のEOTの前後に空白など何も入れてはいけない。
@@ -81,9 +81,9 @@ if(!empty($_POST)){
 ※ログイン後、パスワードのご変更をお願い致します
 
 ////////////////////////////////////////
-ウェブカツマーケットカスタマーセンター
+Review 公式
 URL  http://review.nyanta.jp/review/index.php
-E-mail sumedicecalesddefde_7777@yahoo.co.jp
+E-mail success@review.nyanta.jp
 ////////////////////////////////////////
 EOT;
             sendMail($from, $to, $subject, $comment);
@@ -149,7 +149,7 @@ require('head.php');
             </div>
           </form>
         </div>
-        <a href="passRemindSend.php">&lt; パスワード再発行メールを再度送信する</a>
+        <a href="passRemindSend.php" class="pass-remind-back">&lt; パスワード再発行メールを再度送信する</a>
       </section>
 
     </div>

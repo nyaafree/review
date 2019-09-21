@@ -4,7 +4,7 @@
 require('function.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
-debug('「　トップページ　');
+debug('「 トップページ ');
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debugLogStart();
 
@@ -16,14 +16,15 @@ debugLogStart();
 //===============================================================
 // GETパラメータ取得
 //===============================================================
-// カレントページ
+// 現在のページ番号
 $currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1; // ページ用GETパラメータがなければ１ページ目
 // カテゴリー
-$category = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
+$category = (!empty($_GET['c_id'])) ? $_GET['c_id'] : ''; 
 // フリーワード
-$freeWord = (!empty($_GET['free'])) ? $_GET['free'] : '';
+$freeWord = (!empty($_GET['free'])) ? $_GET['free'] : ''; 
 // レビューソート
 $sort = (!empty($_GET['sort'])) ? $_GET['sort'] : '';
+
 // パラメータに不正な値が入っているかチェック
 if(!is_int((int)$currentPageNum)){
   error_log('エラー発生：指定ページに不正な値が入りました。');
@@ -73,16 +74,18 @@ require('head.php');
           <span class="total-num"><?php echo sanitize($dbProductData['total']); ?></span>件の商品が見つかりました
         </div>
         <div class="search-right">
-          <span class="num"><?php echo (!empty($dbProductData['data'])) ? $currentMinNum + 1 : 0; ?></span> - <span class="num"><?php echo $currentMinNum + count($dbProductData['data']); ?></span>件 / <span class="num"><?php echo $dbProductData['total']; ?></span>件中
+          <span class="num"><?php echo (!empty(sanitize($dbProductData['data']))) ? $currentMinNum + 1 : 0; ?></span> - <span class="num"><?php echo $currentMinNum + count($dbProductData['data']); ?></span>件 / <span class="num"><?php echo $dbProductData['total']; ?></span>件中
         </div>
       </div>
       <div class="panel-list">
         <?php foreach($dbProductData['data'] as $key => $val): ?>
-          <a href="productDetail.php<?php echo (!empty(appendGetParam())) ? appendGetParam().'&p_id='.$val['id'] : '?p_id='.$val['id']; ?> " class="panel">
+          <a href="productDetail.php<?php echo (!empty(appendGetParam())) ? appendGetParam().'&p_id='.sanitize($val['id']) : '?p_id='.sanitize($val['id']); ?> " class="panel">
             <div class="panel-head">
-               <div class="head-right"><?php echo $val['name']; ?></div>
+              <!-- 商品名 -->
+              <div class="head-right"><?php echo $val['name']; ?></div>
             </div>
             <div class="panel-left">
+              <!-- 商品の画像と購入サイト -->
               <img src="<?php echo sanitize($val['pic']); ?>" alt="<?php echo sanitize($val['name']); ?>">
               <div class="head-left"><?php echo $val['purchasesite'];?></div>
             </div>
@@ -99,7 +102,7 @@ require('head.php');
         <?php endforeach ?>
       </div>
 
-      <?php pagination($currentPageNum,$dbProductData['total_page'] ); ?>
+      <?php pagination($currentPageNum,$dbProductData['total_page'],addParam(array('p')) ); ?>
     </section>
   </div>
 
@@ -108,4 +111,3 @@ require('head.php');
   ?>
 
 
-<!-- <div class="head-left"><?php echo $val['purchasesite'];?></div> -->

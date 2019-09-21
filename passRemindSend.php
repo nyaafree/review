@@ -12,7 +12,7 @@ debugLogStart();
 //================================
 // 画面処理
 //================================
-//post送信されていた場合
+// post送信されていた場合
 if(!empty($_POST)){
   debug('POST送信があります。');
   debug('POST情報：'.print_r($_POST,true));
@@ -44,6 +44,8 @@ if(!empty($_POST)){
         // クエリ実行
         $stmt = queryPost($dbh, $sql, $data);
         // クエリ結果の値を取得
+        // 引数のPDO::FETCH_ASSOCは、列名を記述し配列で取り出す設定をしている。配列の最後まで下記を実行し続ける
+        // fetch:取り出す。Assoc:Associationで、連想する
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // EmailがDBに登録されている場合
@@ -84,7 +86,7 @@ EOT;
           $_SESSION['auth_key_limit'] = time()+(60*30); //現在時刻より30分後のUNIXタイムスタンプを入れる
           debug('セッション変数の中身：'.print_r($_SESSION,true));
           
-          header("Location:passRemindRecieve.php"); //認証キー入力ページへ
+          header("Location:passRemindReceive.php"); //認証キー入力ページへ
 
         }else{
           debug('クエリに失敗したかDBに登録のないEmailが入力されました。');
