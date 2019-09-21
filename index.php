@@ -73,10 +73,10 @@ require('head.php');
     <section id="main2">
       <div class="search-title">
         <div class="search-left">
-          <span class="total-num"><?php echo sanitize($dbProductData['total']); ?></span>件の商品が見つかりました
+          <span class="total-num"><?php echo $dbProductData['total']; ?></span>件の商品が見つかりました
         </div>
         <div class="search-right">
-          <span class="num"><?php echo (!empty(sanitize($dbProductData['data']))) ? $currentMinNum + 1 : 0; ?></span> - <span class="num"><?php echo $currentMinNum + count($dbProductData['data']); ?></span>件 / <span class="num"><?php echo $dbProductData['total']; ?></span>件中
+          <span class="num"><?php echo (!empty($dbProductData['data'])) ? $currentMinNum + 1 : 1; ?></span> - <span class="num"><?php echo $currentMinNum + count($dbProductData['data']); ?></span>件 / <span class="num"><?php echo $dbProductData['total']; ?></span>件中
         </div>
       </div>
       <div class="panel-list">
