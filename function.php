@@ -325,6 +325,8 @@ function showReview($ReviewInfo){
         echo "<span class='rate rate4-5'></span>";
   }elseif(4.5 < $ReviewInfo && $ReviewInfo <= 5.0){
         echo "<span class='rate rate5'></span>";
+  }elseif($ReviewInfo == 0){
+        echo "<span class='no-reivew'>評価なし</span>";
   }
 }
 
@@ -435,14 +437,14 @@ function getProductList($currentMinNum = 0, $category, $freeWord, $sort, $span =
     // DBへ接続
     $dbh = dbConnect();
     // 件数用のSQL文作成
-    $sql = 'SELECT id FROM product';
+    $sql = 'SELECT id FROM product where delete_flg = 0';
     if(!empty($freeWord)){ 
       // 商品名またはレビュー内容または購入サイトからフリーワードに一致するものを検索
-      $sql .= ' WHERE (name LIKE "%'.$freeWord.'%" OR comment 
-      LIKE "%'.$freeWord.'%" OR purchasesite LIKE "%'.$freeWord.'%" ) AND delete_flg = 0';
+      $sql .= ' AND (name LIKE "%'.$freeWord.'%" OR comment 
+      LIKE "%'.$freeWord.'%" OR purchasesite LIKE "%'.$freeWord.'%" )';
       if(!empty($category)) $sql .= ' AND category_id = '.$category;
     }else{
-      if(!empty($category)) $sql .= ' WHERE category_id = '.$category;
+      if(!empty($category)) $sql .= ' AND category_id = '.$category;
     }
    
     if(!empty($sort)){
@@ -467,13 +469,13 @@ function getProductList($currentMinNum = 0, $category, $freeWord, $sort, $span =
     }
 
     // ページング用のSQL文作成
-    $sql = 'SELECT * FROM product';
+    $sql = 'SELECT * FROM product where delete_flg = 0';
     if(!empty($freeWord)){ 
-      $sql .= ' WHERE (name LIKE "%'.$freeWord.'%" OR comment 
-      LIKE "%'.$freeWord.'%" OR purchasesite LIKE "%'.$freeWord.'%" ) AND delete_flg = 0';
+      $sql .= ' AND (name LIKE "%'.$freeWord.'%" OR comment 
+      LIKE "%'.$freeWord.'%" OR purchasesite LIKE "%'.$freeWord.'%" )';
       if(!empty($category)) $sql .= ' AND category_id = '.$category;
     }else{
-      if(!empty($category)) $sql .= ' WHERE category_id = '.$category;
+      if(!empty($category)) $sql .= ' AND category_id = '.$category;
     }
     if(!empty($sort)){
       switch($sort){
@@ -790,5 +792,31 @@ function flashErrMsg(){
     return $data;
   }
 }
+// 平均レビュー値の更新
+// function updateAverageReviews(){
+//   global $err_msg;
+//   // 例外処理
+//   try{
+//     // DBへ接続
+//     $dbh = dbConnect();
+//     // SQL文作成
+//     $sql = 'UPDATE product SET average_review = :avg ';
+//     $data = array();
+//     // クエリ実行
+//     $stmt = queryPost($dbh, $sql, $data);
 
+//     // クエリ結果のレコードを１レコード返却
+//     if($stmt){
+//       return $stmt->fetch(PDO::FETCH_ASSOC);
+//     }else{
+//       return false;
+//     }
+//   } catch (Exception $e) {
+//     error_log('エラー発生：'.$e->getMessage());
+//     $err_msg['common'] = MSG07;
+//   }
+// }
+// }
+
+// 
 ?>

@@ -625,6 +625,7 @@ section#blind{
   font-size:12px;
   text-align:center;
   font-weight:bold;
+  word-wrap: break-word;
 }
 #purchase-link{
   color:#fff;
@@ -719,6 +720,7 @@ section#blind{
   padding:10px;
   box-sizing:border-box;
   font-size:16px;
+  word-wrap: break-word;
 }
 .head-right .price{
   font-size:24px;
@@ -791,6 +793,9 @@ section#blind{
   position:relative;
   margin-left:15px;
   line-height:80px;
+}
+.review-bottom{
+  word-wrap: break-word;
 }
 .review-modal{
   position:absolute;

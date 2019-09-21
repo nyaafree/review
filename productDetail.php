@@ -32,7 +32,7 @@ debug('コンテンツのレビュー情報：'.print_r($dbReviewData,true));
 // パラメータに不正な値が入っているかチェック
 if(empty($dbProductData)){
   error_log('エラー発生：指定ページに不正な値が入りました。');
-  header("Location:mypage.php"); //マイページへ遷移
+  header("Location:index.php"); //マイページへ遷移
 }
 debug('取得したDBデータ：'.print_r($dbProductData,true));
 
